@@ -196,7 +196,8 @@ Structured JSON:
 - Hosting frontend/backend
 - Environment variable configuration
 - Secure API key handling
-- Public 
+- Public accessibility through a deployed URL
+- Managing API secrets and deployment configuration
 
 ---
 
