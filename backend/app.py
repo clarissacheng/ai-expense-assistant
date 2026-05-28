@@ -28,24 +28,41 @@ from backend.db import (
 
 app = FastAPI()
 
-allowed_origins = os.environ.get(
-    "ALLOW_ORIGINS",
-    "http://localhost:3000,http://127.0.0.1:3000"
-).split(",")
+allowed_origins = [
+    origin.strip() for origin in os.environ.get(
+        "ALLOW_ORIGINS",
+        "http://localhost:3000,http://127.0.0.1:3000"
+    ).split(",")
+]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=600,
 )
 
 COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE", "false").lower() == "true"
 
 @app.on_event("startup")
 def startup():
+    print("Starting backend with CORS origins:", allowed_origins)
     init_db()
+
+
+@app.exception_handler(Exception)
+async def all_exception_handler(request, exc):
+    import traceback
+    print("Unhandled exception:", repr(exc))
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error", "error": str(exc)},
+    )
 
 
 def require_user(session_token: Optional[str] = Cookie(default=None)):
