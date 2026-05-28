@@ -1,0 +1,618 @@
+[
+  {
+    "store_name": "SUPERMARKET",
+    "date": "",
+    "items": [
+      {
+        "name": "Large Eggs",
+        "unit_price": 6.17,
+        "quantity": 1,
+        "total_price": 6.17,
+        "category": "Protein"
+      },
+      {
+        "name": "Milk",
+        "unit_price": 1.8,
+        "quantity": 1,
+        "total_price": 1.8,
+        "category": "Dairy"
+      },
+      {
+        "name": "Cottage Cheese",
+        "unit_price": 1.64,
+        "quantity": 1,
+        "total_price": 1.64,
+        "category": "Dairy"
+      },
+      {
+        "name": "Natural Yogurt",
+        "unit_price": 1.2,
+        "quantity": 1,
+        "total_price": 1.2,
+        "category": "Dairy"
+      },
+      {
+        "name": "Cherry Tomatoes 1lb",
+        "unit_price": 3.82,
+        "quantity": 1,
+        "total_price": 3.82,
+        "category": "Vegetable"
+      },
+      {
+        "name": "Bananas 1lb",
+        "unit_price": 0.68,
+        "quantity": 1,
+        "total_price": 0.68,
+        "category": "Fruit"
+      },
+      {
+        "name": "Aubergine",
+        "unit_price": 2.15,
+        "quantity": 1,
+        "total_price": 2.15,
+        "category": null
+      },
+      {
+        "name": "Cheese Crackers",
+        "unit_price": 2.44,
+        "quantity": 1,
+        "total_price": 2.44,
+        "category": "Snack"
+      },
+      {
+        "name": "Chocolate Cookies",
+        "unit_price": 2.29,
+        "quantity": 1,
+        "total_price": 2.29,
+        "category": "Snack"
+      },
+      {
+        "name": "Canned Tuna 12pk",
+        "unit_price": 11.98,
+        "quantity": 1,
+        "total_price": 11.98,
+        "category": "Protein"
+      },
+      {
+        "name": "Chicken Breast",
+        "unit_price": 6.79,
+        "quantity": 1,
+        "total_price": 6.79,
+        "category": "Protein"
+      },
+      {
+        "name": "Toilet Paper",
+        "unit_price": 8.84,
+        "quantity": 1,
+        "total_price": 8.84,
+        "category": "Utility"
+      },
+      {
+        "name": "Baby Wipes",
+        "unit_price": 2.99,
+        "quantity": 1,
+        "total_price": 2.99,
+        "category": "Utility"
+      }
+    ],
+    "total": 52.79
+  },
+  {
+    "store_name": "Walmart",
+    "date": "2011-11-06",
+    "items": [
+      {
+        "name": "BREAD",
+        "unit_price": 2.88,
+        "quantity": 1,
+        "total_price": 2.88,
+        "category": "Carb"
+      },
+      {
+        "name": "GV PNT BUTTR",
+        "unit_price": 3.84,
+        "quantity": 1,
+        "total_price": 3.84,
+        "category": "Dairy"
+      },
+      {
+        "name": "GV PARM 16OZ",
+        "unit_price": 4.98,
+        "quantity": 1,
+        "total_price": 4.98,
+        "category": null
+      },
+      {
+        "name": "GV CHNK CHKN",
+        "unit_price": 1.98,
+        "quantity": 1,
+        "total_price": 1.98,
+        "category": "Protein"
+      },
+      {
+        "name": "12 CT NITRIL",
+        "unit_price": 2.78,
+        "quantity": 1,
+        "total_price": 2.78,
+        "category": null
+      },
+      {
+        "name": "FOLGERS",
+        "unit_price": 10.48,
+        "quantity": 1,
+        "total_price": 10.48,
+        "category": null
+      },
+      {
+        "name": "SC TWIST UP",
+        "unit_price": 0.88,
+        "quantity": 1,
+        "total_price": 0.88,
+        "category": null
+      },
+      {
+        "name": "EGGS",
+        "unit_price": 1.84,
+        "quantity": 1,
+        "total_price": 1.84,
+        "category": "Protein"
+      }
+    ],
+    "total": 46.3
+  },
+  {
+    "store_name": "ROELF VOS",
+    "date": "20/03/97",
+    "items": [
+      {
+        "name": "H/B BREAD 900GM",
+        "unit_price": 1.47,
+        "quantity": 1,
+        "total_price": 1.47,
+        "category": "Carb"
+      },
+      {
+        "name": "MIRACLE MARG 1KG",
+        "unit_price": 2.87,
+        "quantity": 1,
+        "total_price": 2.87,
+        "category": null
+      },
+      {
+        "name": "S/R GNOCCHI 500G",
+        "unit_price": 1.65,
+        "quantity": 1,
+        "total_price": 1.65,
+        "category": null
+      },
+      {
+        "name": "HNZ BEANS 425 GM",
+        "unit_price": 1.15,
+        "quantity": 1,
+        "total_price": 1.15,
+        "category": null
+      },
+      {
+        "name": "SPC BEANS 425 GM",
+        "unit_price": 1.05,
+        "quantity": 1,
+        "total_price": 1.05,
+        "category": null
+      },
+      {
+        "name": "C/TONIGHT 480 GM",
+        "unit_price": 2.99,
+        "quantity": 1,
+        "total_price": 2.99,
+        "category": null
+      },
+      {
+        "name": "KING CHICKEN 17",
+        "unit_price": 7.49,
+        "quantity": 1,
+        "total_price": 7.49,
+        "category": null
+      }
+    ],
+    "total": 20.14
+  },
+  {
+    "store_name": "",
+    "date": "06/01/2016",
+    "items": [
+      {
+        "name": "Zuchinni Green",
+        "unit_price": 5.99,
+        "quantity": 1,
+        "total_price": 5.99,
+        "category": "Vegetable"
+      },
+      {
+        "name": "Banana Cavendish",
+        "unit_price": 2.99,
+        "quantity": 1,
+        "total_price": 2.99,
+        "category": "Fruit"
+      },
+      {
+        "name": "Potatoes Brushed",
+        "unit_price": 2.99,
+        "quantity": 1,
+        "total_price": 2.99,
+        "category": "Carb"
+      },
+      {
+        "name": "Broccoli",
+        "unit_price": 5.99,
+        "quantity": 1,
+        "total_price": 5.99,
+        "category": "Vegetable"
+      },
+      {
+        "name": "Brussel Sprouts",
+        "unit_price": 15.99,
+        "quantity": 1,
+        "total_price": 15.99,
+        "category": "Vegetable"
+      },
+      {
+        "name": "Grapes Green",
+        "unit_price": 5.99,
+        "quantity": 1,
+        "total_price": 5.99,
+        "category": "Fruit"
+      },
+      {
+        "name": "Peas Snow",
+        "unit_price": 14.99,
+        "quantity": 1,
+        "total_price": 14.99,
+        "category": "Vegetable"
+      },
+      {
+        "name": "Tomatoes Grape",
+        "unit_price": 2.99,
+        "quantity": 1,
+        "total_price": 2.99,
+        "category": "Vegetable"
+      },
+      {
+        "name": "Lettuce Iceberg",
+        "unit_price": 2.49,
+        "quantity": 1,
+        "total_price": 2.49,
+        "category": "Vegetable"
+      }
+    ],
+    "total": 24.2
+  },
+  {
+    "store_name": "WALL-MART-SUPERSTORE",
+    "date": "10/17/2020",
+    "items": [
+      {
+        "name": "HAND TOWEL",
+        "unit_price": 2.97,
+        "quantity": 1,
+        "total_price": 2.97,
+        "category": "Utility"
+      },
+      {
+        "name": "GATORADE",
+        "unit_price": 2.0,
+        "quantity": 1,
+        "total_price": 2.0,
+        "category": "Drink"
+      },
+      {
+        "name": "T-SHIRT",
+        "unit_price": 16.88,
+        "quantity": 1,
+        "total_price": 16.88,
+        "category": "Clothes"
+      },
+      {
+        "name": "PUSH PINS",
+        "unit_price": 1.24,
+        "quantity": 1,
+        "total_price": 1.24,
+        "category": "Clothes"
+      }
+    ],
+    "total": 27.27
+  },
+  {
+    "store_name": "Wegmans",
+    "date": "",
+    "items": [
+      {
+        "name": "BANANAS",
+        "unit_price": 1.05,
+        "quantity": 1,
+        "total_price": 1.05,
+        "category": "Fruit"
+      },
+      {
+        "name": "GRAPE TOMATOES",
+        "unit_price": 2.99,
+        "quantity": 1,
+        "total_price": 2.99,
+        "category": "Vegetable"
+      },
+      {
+        "name": "TOMATO RED PLUM",
+        "unit_price": 1.59,
+        "quantity": 1,
+        "total_price": 1.59,
+        "category": "Vegetable"
+      },
+      {
+        "name": "LETT GREEN LEAF",
+        "unit_price": 1.99,
+        "quantity": 1,
+        "total_price": 1.99,
+        "category": "Vegetable"
+      },
+      {
+        "name": "SQUASH GOLD",
+        "unit_price": 1.07,
+        "quantity": 1,
+        "total_price": 1.07,
+        "category": null
+      },
+      {
+        "name": "SQUASH GREEN",
+        "unit_price": 1.67,
+        "quantity": 1,
+        "total_price": 1.67,
+        "category": null
+      },
+      {
+        "name": "BEANS GREEN",
+        "unit_price": 2.19,
+        "quantity": 1,
+        "total_price": 2.19,
+        "category": "Vegetable"
+      },
+      {
+        "name": "GRAPES RED SDLS",
+        "unit_price": 6.85,
+        "quantity": 1,
+        "total_price": 6.85,
+        "category": "Fruit"
+      },
+      {
+        "name": "LEMONS",
+        "unit_price": 0.69,
+        "quantity": 1,
+        "total_price": 0.69,
+        "category": "Fruit"
+      },
+      {
+        "name": "GARLIC BULK",
+        "unit_price": 1.0,
+        "quantity": 1,
+        "total_price": 1.0,
+        "category": null
+      },
+      {
+        "name": "POTATO SWEET WHITE",
+        "unit_price": 3.04,
+        "quantity": 1,
+        "total_price": 3.04,
+        "category": null
+      }
+    ],
+    "total": 160.54
+  },
+  {
+    "store_name": "PC MARKET OF CHOICE",
+    "date": "20JAN2007",
+    "items": [
+      {
+        "name": "Bananas",
+        "unit_price": 0.69,
+        "quantity": 1,
+        "total_price": 0.69,
+        "category": "Fruit"
+      },
+      {
+        "name": "1 BAL DUE",
+        "unit_price": 0.0,
+        "quantity": 1,
+        "total_price": 0.0,
+        "category": null
+      }
+    ],
+    "total": 0.32
+  },
+  {
+    "store_name": "TARGET",
+    "date": "03/06/2016",
+    "items": [
+      {
+        "name": "UPUP HOUSEH",
+        "unit_price": 1.94,
+        "quantity": 1,
+        "total_price": 1.94,
+        "category": null
+      },
+      {
+        "name": "OREO COOKIE",
+        "unit_price": 2.99,
+        "quantity": 1,
+        "total_price": 2.99,
+        "category": "Snack"
+      },
+      {
+        "name": "NATVAL ENER",
+        "unit_price": 5.89,
+        "quantity": 1,
+        "total_price": 5.89,
+        "category": null
+      },
+      {
+        "name": "MOTTS FRTSN",
+        "unit_price": 1.5,
+        "quantity": 2,
+        "total_price": 3.0,
+        "category": null
+      },
+      {
+        "name": "V8",
+        "unit_price": 4.19,
+        "quantity": 1,
+        "total_price": 4.19,
+        "category": "Drink"
+      },
+      {
+        "name": "OSCAR MAYER",
+        "unit_price": 2.5,
+        "quantity": 1,
+        "total_price": 2.5,
+        "category": null
+      },
+      {
+        "name": "NAKED",
+        "unit_price": 2.5,
+        "quantity": 1,
+        "total_price": 2.5,
+        "category": "Drink"
+      },
+      {
+        "name": "TOMATO",
+        "unit_price": 0.99,
+        "quantity": 1,
+        "total_price": 0.99,
+        "category": "Vegetable"
+      },
+      {
+        "name": "LETTUCE",
+        "unit_price": 1.49,
+        "quantity": 1,
+        "total_price": 1.49,
+        "category": "Vegetable"
+      },
+      {
+        "name": "KC MASTERPC",
+        "unit_price": 1.32,
+        "quantity": 1,
+        "total_price": 1.32,
+        "category": null
+      },
+      {
+        "name": "MARKET PANT",
+        "unit_price": 3.79,
+        "quantity": 1,
+        "total_price": 3.79,
+        "category": null
+      },
+      {
+        "name": "BC SDNLY SL",
+        "unit_price": 2.29,
+        "quantity": 1,
+        "total_price": 2.29,
+        "category": null
+      },
+      {
+        "name": "PEPPERIDGE",
+        "unit_price": 2.99,
+        "quantity": 1,
+        "total_price": 2.99,
+        "category": "Snack"
+      },
+      {
+        "name": "SMUCKERS",
+        "unit_price": 2.39,
+        "quantity": 1,
+        "total_price": 2.39,
+        "category": null
+      },
+      {
+        "name": "JENNIE-O",
+        "unit_price": 2.99,
+        "quantity": 1,
+        "total_price": 2.99,
+        "category": null
+      },
+      {
+        "name": "LEAN CUISIN",
+        "unit_price": 2.45,
+        "quantity": 2,
+        "total_price": 5.34,
+        "category": null
+      },
+      {
+        "name": "EVOL",
+        "unit_price": 5.59,
+        "quantity": 1,
+        "total_price": 5.59,
+        "category": null
+      },
+      {
+        "name": "BIRD SUBB H",
+        "unit_price": 4.09,
+        "quantity": 1,
+        "total_price": 4.09,
+        "category": null
+      },
+      {
+        "name": "MP EGGS",
+        "unit_price": 1.99,
+        "quantity": 1,
+        "total_price": 1.99,
+        "category": "Protein"
+      },
+      {
+        "name": "REDDI WIP",
+        "unit_price": 3.72,
+        "quantity": 1,
+        "total_price": 3.72,
+        "category": null
+      },
+      {
+        "name": "MP H AND H",
+        "unit_price": 1.41,
+        "quantity": 1,
+        "total_price": 1.41,
+        "category": null
+      },
+      {
+        "name": "CHOBANI",
+        "unit_price": 1.0,
+        "quantity": 2,
+        "total_price": 3.0,
+        "category": "Dairy"
+      },
+      {
+        "name": "BREYERS",
+        "unit_price": 3.49,
+        "quantity": 1,
+        "total_price": 3.49,
+        "category": null
+      },
+      {
+        "name": "AQUAF 2PK",
+        "unit_price": 4.89,
+        "quantity": 1,
+        "total_price": 4.89,
+        "category": null
+      },
+      {
+        "name": "SONICARE",
+        "unit_price": 21.99,
+        "quantity": 1,
+        "total_price": 21.99,
+        "category": null
+      },
+      {
+        "name": "BISSELL",
+        "unit_price": 129.99,
+        "quantity": 1,
+        "total_price": 129.99,
+        "category": null
+      }
+    ],
+    "total": 251.83
+  }
+]
