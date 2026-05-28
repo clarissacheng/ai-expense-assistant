@@ -1,260 +1,171 @@
 # AI Expense Assistant
-### “AI-powered receipt scanner with budgeting insights and recurring spending analysis (Ship with auth + live URL)”
+
+### Project Proposal
+A secure, deployable receipt scanner and spending analytics app built with React, FastAPI, and PostgreSQL. The system enforces budget-safe AI usage, supports authenticated users, and stores receipt history for analytics.
 
 ---
 
-# One Sentence Description
-
-An AI-powered expense tracking web app that allows users to upload receipts, automatically extract structured purchase information using multimodal LLMs, track spending patterns over time, and receive AI-generated budgeting insights through a deployed authenticated web application.
+## One Sentence Description
+A hosted receipt extraction and analytics tool using secure cookie-based auth, AI vision extraction, and Postgres persistence with explicit API cost guardrails.
 
 ---
 
-# Past Project Reference
+## Problem Statement
+Many receipt scanning solutions either sacrifice security, rely on local data storage, or expose users to uncontrolled AI costs. This project delivers a complete end-to-end system that is safe for users, deployable in production, and mindful of API spending.
 
-This project extends Assignment 2: Document Scanner (Receipt Scanner).
+## Past Project Reference
+This project is built as an extension of the Assignment 2 Document Scanner.
 
-Base project repository:  
+Repository reference:
 https://github.com/ucsd-cse-genai-programming-sp26/02-doc-scanner-cc
 
-The current system already supports:
-- receipt upload
-- multimodal receipt extraction using GPT-4.1
-- user correction workflows
-- persistent receipt history
-- spending dashboards
-- basic authentication and per-user data isolation
-
-This final project will extend the system into a more complete AI expense assistant with deployment, budgeting insights, and enhanced analytics.
+The base work provided receipt upload and extraction. This final project advances it by adding:
+- secure login and session management
+- hosted backend architecture
+- Postgres-ready persistence
+- spending and budget analytics
+- deployment readiness for Render and Vercel
 
 ---
 
-# Planned Technologies
+## Technology Stack
 
-## Frontend
+### Frontend
 - React
 - Axios
 - Recharts
 
-## Backend
+### Backend
 - FastAPI
-- Python
+- SQLAlchemy
+- Python 3.x
+- Uvicorn
 
-## Database
-- SQLite (initially)
-- Optional PostgreSQL if deployment requires it
+### Database
+- PostgreSQL for deployment
+- SQLite fallback for local development only
 
-## AI / LLM
-- OpenAI GPT-4.1 Vision API
+### AI / LLM
+- OpenAI GPT-4.1 Vision API for receipt extraction
 
-## Authentication
-- Existing username/password auth system
-- Session persistence using localStorage
+### Authentication
+- username/password auth
+- bcrypt password hashing
+- httpOnly cookie sessions
 
-## Deployment
-Potential options:
-- Render
-- Railway
-- Fly.io
-
-## Other Tools
-- dotenv
-- uvicorn
+### DevOps and Infrastructure
+- Render for backend deployment
+- Vercel for frontend deployment
+- environment-based configuration via `DATABASE_URL` and `OPENAI_API_KEY`
 
 ---
 
-# First Deliverable
+## First Deliverable: Goals
+Deliver a functioning public web app that allows a user to:
+1. Register and log in securely
+2. Upload a receipt image
+3. View AI-extracted receipt data
+4. Correct receipt fields and item categories
+5. Save corrected receipts to a persistent store
+6. Review spending summaries by merchant and category
+7. Access the app from a public URL with managed Postgres storage
 
-## Goal
-Deploy the existing receipt scanner as a live authenticated web application.
-
-## User Story
-A user should be able to:
-1. Create an account
-2. Login
-3. Upload a receipt
-4. Edit extracted data
-5. Save the receipt
-6. View their own spending dashboard
-7. Access the app from a public URL
-
-## Why This Deliverable
-This forces every major system component to work together:
-- frontend
-- backend API
-- authentication
-- database persistence
-- AI extraction
-- deployment
-- networking/configuration
-
-It validates the full stack before adding more advanced AI assistant features.
+### Success criteria
+- Authentication is secure and session-based
+- Receipt extraction is powered by OpenAI Vision
+- Budget guardrails prevent excessive API usage
+- Spending analytics are generated from persisted receipts
+- Application is deployable to Render and Vercel
 
 ---
 
-# Rough Architecture for First Deliverable
+## Architecture Overview
 
-## 1. React Frontend
-### Input
-- Receipt image upload
-- Login credentials
-- User corrections
+### React Frontend
+The frontend provides:
+- login/register forms
+- receipt upload and file handling
+- extracted data editing UI
+- save/correct flows
+- analytics dashboard with merchant totals and category summaries
 
-### Output
-- Dashboard UI
-- Editable extracted receipt data
-- Spending analytics
+### FastAPI Backend
+The backend provides:
+- auth endpoints (`/register/`, `/login/`, `/logout/`, `/me/`)
+- upload endpoint (`/upload/`) with budget validation
+- receipt save endpoint (`/receipt/{id}`)
+- analytics endpoints (`/summary/`, `/category_summary/`, `/receipts/`)
+- correction persistence endpoint (`/correct/`)
 
-### Effects
-- Sends API requests to backend
-- Maintains user session state
+### Database Layer
+The backend uses SQLAlchemy to model:
+- `users`
+- `sessions`
+- `receipts`
 
----
+It supports both local SQLite and production Postgres via `DATABASE_URL`.
 
-## 2. FastAPI Backend
-### Input
-- Uploaded images
-- Authentication requests
-- Corrected receipt data
+### AI Pipeline
+`backend/extractor.py` handles receipt image ingestion, calls OpenAI Vision, parses JSON, and normalizes results. Corrections are applied to merchant names and item categories.
 
-### Output
-- Structured JSON receipt data
-- Aggregated summaries
-- Auth responses
+### Budget Guardrails
+The upload flow checks:
+- per-user monthly estimated cost
+- global daily estimated cost
 
-### Effects
-- Calls OpenAI API
-- Reads/writes database
-
----
-
-## 3. Receipt Extraction Pipeline
-### Input
-- Receipt image bytes
-
-### Output
-Structured JSON:
-```json
-{
-  "store_name": "...",
-  "date": "...",
-  "total": "...",
-  "items": [...]
-}
-
---- 
-
-## 4. User Correction Memory 
-### Input
-
-- Corrected categories/store names
-
-### Output 
-
-- Updated correction mappings
-
-### Effects
-
-- Stores reusable extraction hints
-- Injects corrections into future prompts
+Requests are rejected before calling OpenAI if limits are exceeded.
 
 ---
 
-## 5. SQLite Database
+## Deployment Plan
+### Backend deployment
+Primary deployment target is Render. The backend is configured for hosted Postgres and environment-driven startup.
 
-### Stores
+Required Render environment variables:
+- `DATABASE_URL`
+- `OPENAI_API_KEY`
+- `SESSION_COOKIE_SECURE=true`
+- `GLOBAL_DAILY_COST_CEILING=10.0`
+- `USER_MONTHLY_COST_CEILING=5.0`
+- `ALLOW_ORIGINS=https://your-frontend-url` (or local dev origin)
 
-- Users
-- Receipts
-- Receipt metadata
-- Per-user receipt history
+Recommended build/start commands:
+```bash
+pip install -r requirements.txt
+uvicorn backend.app:app --host 0.0.0.0 --port $PORT
+```
 
-### Effects
+### Frontend deployment
+Primary deployment target is Vercel.
 
-- Enables persistence across sessions
-- Supports dashboard aggregation queries
+Required Vercel environment variable:
+- `REACT_APP_API_BASE_URL=https://your-backend.onrender.com`
 
----
-
-## 6. Analytics Layer
-
-### Input
-
-- Stored receipt data
-
-### Output
-
-- Spending by store
-- Spending by category
-- Historical summaries
-
----
-
-## 7. Deployment Layer
-
-### Responsibilities
-
-- Hosting frontend/backend
-- Environment variable configuration
-- Secure API key handling
-- Public accessibility through a deployed URL
-- Managing API secrets and deployment configuration
+### Deployment blockers and workarounds
+- If GitHub organization permission blocks Render/Vercel, use a fork or personal repo copy to deploy.
+- Do not commit any secret credentials or database URLs.
 
 ---
 
-## After First Deliverable Goals
+## Implementation Status
+The current codebase implements:
+- secure user auth and session cookies
+- receipt upload, extraction, and correction workflows
+- persistent receipt history and analytics
+- budget controls for AI usage
+- deployment documentation for Render/Vercel
 
-### AI Budgeting Insights
-
-- Generate natural-language spending summaries
-- Detect unusually high spending categories
-- Suggest budget improvements
-
-Example:
-
-“You spent 32% more on dining this month compared to last month.”
-
----
-
-## Recurring Purchase Detection
-
-- Detect repeated merchants/subscriptions
-- Highlight recurring expenses automatically
-
-Examples:
-
-- Netflix
-- Spotify
-- Gym memberships
+Remaining work for finalization:
+- connect Render/Vercel to the repo once org approvals arrive
+- provision hosted Postgres and run the migration
+- publish frontend with the live backend URL
 
 ---
 
-## Monthly Spending Trends
+## Future Enhancements
+- natural-language spending summaries
+- recurring expense detection
+- multi-month trend analysis
+- improved item categorization suggestions
+- receipt search and filtering
 
-* Line charts across weeks/months
-* Category trend tracking over time
-
----
-
-## Smarter Category Suggestions
-
-- Use historical user corrections to auto-suggest categories
-- Confidence-based category recommendations
-
----
-
-## Receipt Search
-
-Allow users to search receipts by:
-
-- merchant
-- item name
-- category
-- date range
-
----
-
-## Improved Dashboard UX
-
-- Better layout organization
-- Mobile responsiveness
-- Cleaner analytics views
