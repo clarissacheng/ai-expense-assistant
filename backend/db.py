@@ -71,7 +71,7 @@ receipts = Table(
     Column("draft", Boolean, nullable=False, default=True),
 )
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256", "bcrypt"], deprecated="auto")
 
 GLOBAL_DAILY_COST_CEILING = float(os.environ.get("GLOBAL_DAILY_COST_CEILING", "10.0"))
 USER_MONTHLY_COST_CEILING = float(os.environ.get("USER_MONTHLY_COST_CEILING", "5.0"))

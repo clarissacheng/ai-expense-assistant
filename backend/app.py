@@ -1,6 +1,7 @@
 import os
 import json
 from typing import Optional
+from pydantic import BaseModel
 from fastapi import FastAPI, File, UploadFile, Depends, Cookie, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -65,6 +66,11 @@ async def all_exception_handler(request, exc):
     )
 
 
+class AuthPayload(BaseModel):
+    username: str
+    password: str
+
+
 def require_user(session_token: Optional[str] = Cookie(default=None)):
     user = get_user_by_session(session_token)
     if user is None:
@@ -72,16 +78,16 @@ def require_user(session_token: Optional[str] = Cookie(default=None)):
     return user
 
 @app.post("/register/")
-def register(data: dict):
-    if not data.get("username") or not data.get("password"):
+def register(data: AuthPayload):
+    if not data.username or not data.password:
         raise HTTPException(status_code=400, detail="username and password are required")
-    user_id = create_user(data["username"], data["password"])
+    user_id = create_user(data.username, data.password)
     if user_id is None:
         raise HTTPException(status_code=400, detail="username already exists")
     return {"status": "registered"}
 
 @app.post("/login/")
-def login(data: dict):
+def login(data: AuthPayload):
     user = authenticate_user(data.get("username"), data.get("password"))
     if user is None:
         raise HTTPException(status_code=401, detail="Invalid credentials")
