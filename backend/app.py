@@ -88,7 +88,7 @@ def register(data: AuthPayload):
 
 @app.post("/login/")
 def login(data: AuthPayload):
-    user = authenticate_user(data.get("username"), data.get("password"))
+    user = authenticate_user(data.username, data.password)
     if user is None:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     token = create_session(user["id"])
