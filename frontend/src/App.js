@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import bg from "./assets/login-background.jpg";
 import axios from "axios";
 import {
   BarChart,
@@ -165,30 +166,71 @@ function App() {
 
   if (!user) {
     return (
-      <div style={{ padding: 30, fontFamily: "Arial, sans-serif" }}>
-        <h2>Login / Register</h2>
-        <div style={card}>
-          <input
-            style={input}
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <input
-            style={input}
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button style={button} onClick={handleLogin}>
-            Login
-          </button>
-          <button style={{ ...button, background: "#2196F3" }} onClick={handleRegister}>
-            Register
-          </button>
-          {message && <p>{message}</p>}
-        </div>
+      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", padding: 0, fontFamily: "Arial, sans-serif", background: "#f5f6fa", backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
+        {/* <header style={{ padding: "18px 20px 6px", textAlign: "center" }}>
+          <h1 style={pageTitle}>AI Expense Assistant</h1>
+        </header> */}
+
+        <main
+          style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
+          }}
+        >
+          <div style={loginCard}>
+            <h1 style={pageTitle}>AI Expense Assistant</h1>
+
+            <div style={cardHeader}>
+              <h2 style={{ margin: 0 }}>Login / Register</h2>
+              <p style={subtitle}>
+                A place to manage your receipts and expenses.
+              </p>
+            </div>
+
+            <input
+              style={input}
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+
+            <input
+              style={input}
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <div style={buttonRow}>
+              <button style={button} onClick={handleLogin}>
+                Login
+              </button>
+
+              <button
+                style={{ ...button, background: "#2196F3" }}
+                onClick={handleRegister}
+              >
+                Register
+              </button>
+            </div>
+
+            {message && (
+              <p
+                style={{
+                  marginTop: "16px",
+                  textAlign: "center",
+                  color: "#333",
+                }}
+              >
+                {message}
+              </p>
+            )}
+          </div>
+        </main>
       </div>
     );
   }
@@ -296,7 +338,7 @@ function App() {
 
             <div style={card}>
               <h3>Spending Dashboard</h3>
-              <div style={{ width: "100%", height: 250 }}>
+              <div style={{ width: "100%", height: 250, minWidth: 0 }}>
                 <ResponsiveContainer>
                   <BarChart data={chartData}>
                     <XAxis dataKey="store" />
@@ -326,22 +368,71 @@ function App() {
 
 const grid = {
   display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: "20px",
-  marginTop: "20px",
+  gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+  gap: "24px",
+  marginTop: "24px",
+  alignItems: "start",
 };
 
 const column = {
   display: "flex",
   flexDirection: "column",
-  gap: "20px",
+  gap: "24px",
+  minWidth: 0,
 };
 
 const card = {
-  background: "white",
-  padding: "20px",
-  borderRadius: "12px",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+  background: "linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%)",
+  padding: "24px",
+  borderRadius: "18px",
+  boxShadow: "0 18px 45px rgba(22, 49, 92, 0.12)",
+  width: "100%",
+  boxSizing: "border-box",
+  display: "flex",
+  flexDirection: "column",
+  gap: "16px",
+  border: "1px solid rgba(0,0,0,0.05)",
+  overflow: "hidden",
+};
+
+const loginCard = {
+  background: "linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%)",
+  padding: "34px",
+  borderRadius: "18px",
+  boxShadow: "0 18px 45px rgba(22, 49, 92, 0.12)",
+  width: "100%",
+  maxWidth: "440px",
+  minHeight: "280px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "16px",
+  border: "1px solid rgba(0,0,0,0.05)",
+  textAlign: "center",
+};
+
+const cardHeader = {
+  textAlign: "center",
+  marginBottom: "10px",
+};
+
+const pageTitle = {
+  margin: 0,
+  background: "linear-gradient(120deg, #2f6bff, #9b5cff, #08d6ff)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  fontSize: "2.6rem",
+  fontWeight: 800,
+  letterSpacing: "0.06em",
+  textShadow: "0 10px 20px rgba(15, 50, 120, 0.18)",
+  whiteSpace: "nowrap",
+};
+
+const subtitle = {
+  margin: "10px 0 0",
+  color: "#555",
+  fontSize: "0.95rem",
 };
 
 const input = {
@@ -352,14 +443,24 @@ const input = {
   border: "1px solid #ccc",
 };
 
-const button = {
+const buttonRow = {
+  display: "flex",
+  gap: "10px",
+  justifyContent: "center",
   marginTop: "10px",
-  padding: "10px 15px",
+};
+
+const button = {
+  padding: "10px 18px",
   borderRadius: "8px",
   border: "none",
   background: "#4CAF50",
   color: "white",
   cursor: "pointer",
+  width: "auto",
+  minWidth: "140px",
+  alignSelf: "flex-start",
+  fontWeight: 600,
 };
 
 const itemRow = {
