@@ -126,8 +126,8 @@ https://ai-expense-assistant-cc.onrender.com
 # 1. Clone Repository
 
 ```bash id="z14g5j"
-git clone <your-repo-url>
-cd <repo-name>
+git clone <https://github.com/clarissacheng/ai-expense-assistant.git>
+cd <ai-expense-assistante>
 ```
 
 ---
