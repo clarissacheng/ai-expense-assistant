@@ -1,15 +1,106 @@
 # Demo Instructions
 
-This document describes how to run the app locally and demonstrate its core functionality. It also includes the exact workflows to show during a demo and the deployment readiness checks for submission.
+## Live Demo URLs
 
-## Local demo setup
+### Frontend (Vercel)
 
-### 1. Backend setup
+https://ai-expense-assistant-sepia.vercel.app/
+
+### Backend API (Render)
+
+https://ai-expense-assistant-cc.onrender.com
+
+This project is deployed publicly and can be demonstrated directly through the hosted frontend application.
+
+---
+
+# Live Demo Workflow
+
+## 1. Register and Login
+
+1. Open the deployed frontend URL
+2. Create a new account using the Register button
+3. Login using the created credentials
+4. Verify that the authenticated dashboard loads successfully
+
+Expected behavior:
+
+* Session cookie is created
+* User-specific dashboard becomes accessible
+* Unauthorized users cannot access receipt endpoints
+
+---
+
+## 2. Upload a Receipt
+
+1. Select a receipt image file
+2. Click "Upload Receipt"
+
+Expected behavior:
+
+* Receipt image is sent to the FastAPI backend
+* OpenAI GPT-4.1 Vision extracts structured receipt data
+* Store name, date, total, and items are displayed
+* Estimated API cost is shown to the user
+
+---
+
+## 3. Edit Extracted Data
+
+1. Modify extracted fields such as:
+
+   * store name
+   * item category
+   * totals
+   * date
+   
+2. Click "Save Corrections"
+
+Expected behavior:
+
+* Updated values persist in the database
+* Corrected data appears in receipt history and analytics
+
+---
+
+## 4. View Spending Analytics
+
+After saving receipts:
+
+### Receipt History
+
+* Displays saved receipts for the authenticated user
+
+### Spending by Store
+
+* Aggregates total spending per merchant
+
+### Spending by Category
+
+* Aggregates totals across categories
+
+### Spending Dashboard
+
+* Displays interactive spending charts using Recharts
+
+Expected behavior:
+
+* Data is isolated per user account
+* Analytics update automatically after uploads
+
+---
+
+# Local Development Setup
+
+## 1. Backend Setup
+
 ```bash
 cd backend
 python3 -m pip install -r requirements.txt
 ```
-Create a `.env` file in `backend/` with:
+
+Create a `.env` file inside `backend/`:
+
 ```text
 OPENAI_API_KEY=your_openai_api_key
 DATABASE_URL=postgresql://postgres:password@localhost:5432/cse291p
@@ -19,83 +110,137 @@ SESSION_COOKIE_SECURE=false
 ALLOW_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 ```
 
-### 2. Frontend setup
+---
+
+## 2. Frontend Setup
+
 ```bash
-cd ../frontend
+cd frontend
 npm install
 ```
 
-### 3. Start services
+Create a `.env` file inside `frontend/`:
+
+```text
+REACT_APP_API_BASE_URL=http://localhost:8000
+```
+
+---
+
+## 3. Start Backend
+
 ```bash
-cd ../backend
+cd backend
 uvicorn backend.app:app --reload --host 0.0.0.0 --port 8000
 ```
+
+---
+
+## 4. Start Frontend
+
 In another terminal:
+
 ```bash
 cd frontend
 npm start
 ```
-Open the app at `http://localhost:3000`.
 
-## Demo flow
+Open:
+http://localhost:3000
 
-### 1. Register and login
-- Open the login screen
-- Create a new account
-- Confirm the session is established and the dashboard loads
+---
 
-### 2. Upload a receipt
-- Choose a receipt image file
-- Submit the upload
-- Confirm the app displays extracted store name, date, total, and items
-- Verify the estimated API cost message appears
+# Production Deployment Notes
 
-### 3. Correct receipt data
-- Change a store name, date, total, or item category
-- Save the corrected receipt
-- Confirm the backend persists the changes
+## Backend Deployment
 
-### 4. View spending analytics
-- Open the receipt history section
-- Verify merchant spending totals are shown
-- Verify category spending summary is shown
-- Confirm the spending dashboard chart renders correctly
+Hosted on Render:
+https://ai-expense-assistant-cc.onrender.com
 
-### 5. Budget guardrail verification
-- Explain that uploads are blocked if monthly or global AI spending exceeds configured limits
-- Optionally demonstrate by lowering `GLOBAL_DAILY_COST_CEILING` and triggering a budget rejection
+Production backend configuration includes:
 
-## Production demo notes
+* FastAPI
+* PostgreSQL support
+* secure session cookies
+* OpenAI API integration
+* CORS configuration
+* deployment environment variables
 
-### Backend deployment requirements
-- Render or Railway backend deployment
-- Managed Postgres instance with `DATABASE_URL`
-- `OPENAI_API_KEY` configured in environment
-- `SESSION_COOKIE_SECURE=true` in production
+---
 
-### Frontend deployment requirements
-- Vercel or Netlify frontend deployment
-- `REACT_APP_API_BASE_URL` pointing to the deployed backend
+## Frontend Deployment
 
-### Expected deployment behavior
-- Backend should start cleanly and connect to Postgres
-- Frontend should load and authenticate against the live backend
-- Receipt uploads and analytics should work from the deployed URL
+Hosted on Vercel:
+https://ai-expense-assistant-sepia.vercel.app/
 
-## Notes for submission
-- This demo covers the full end-to-end stack from frontend to backend to database
-- The app is intentionally built for hosted production with Postgres compatibility
-- The records shown in analytics are generated from persisted receipts and reflect user-specific history
+Production frontend configuration includes:
 
-## Optional migration instructions
-If you have legacy SQLite data to migrate to the hosted database:
+* React
+* Axios API communication
+* authenticated session handling
+* analytics dashboard
+* responsive card-based UI
+
+---
+
+# Architecture Summary
+
+## Frontend
+
+* React SPA
+* Axios-based API communication
+* Recharts analytics dashboard
+* Authenticated session state
+
+## Backend
+
+* FastAPI REST API
+* Session-cookie authentication
+* Receipt extraction endpoints
+* Spending analytics endpoints
+
+## Database
+
+* PostgreSQL-compatible persistence layer
+* Per-user receipt isolation
+* Persistent receipt history
+
+## AI Pipeline
+
+* OpenAI GPT-4.1 Vision receipt extraction
+* Structured JSON receipt parsing
+* Editable correction workflow
+
+---
+
+# Budget Guardrails
+
+The application includes configurable AI spending protections:
+
+* `GLOBAL_DAILY_COST_CEILING`
+* `USER_MONTHLY_COST_CEILING`
+
+Uploads are rejected if configured limits are exceeded.
+
+---
+
+# Recommended Demo Talking Points
+
+* Secure cookie-based authentication instead of localStorage tokens
+* Public deployment with separate frontend/backend hosting
+* AI-powered multimodal receipt extraction
+* Persistent analytics and receipt history
+* Per-user data isolation
+* Production-oriented deployment architecture
+* Budget ceilings for OpenAI API cost protection
+
+---
+
+# Optional Database Migration
+
+To migrate legacy SQLite data into PostgreSQL:
+
 ```bash
 TARGET_DATABASE_URL="postgresql://user:pass@host:5432/cse291p" \
-  python3 backend/migrate_sqlite_to_postgres.py
+python3 backend/migrate_sqlite_to_postgres.py
 ```
-
-## Recommended talking points
-- Secure cookie-based auth avoids storing tokens in localStorage
-- Postgres support is production-ready and required for deployment
-- AI extraction is constrained to structured JSON for reliability
-- Budget ceilings protect against unexpected OpenAI spend

@@ -1,138 +1,353 @@
-# Design Document
+# AI Expense Assistant — Design Decisions
 
 ## Overview
-AI Expense Assistant is a full-stack receipt scanning and spending analytics application. It is designed to provide authenticated users with secure receipt upload, structured AI extraction of receipt data, editable corrections, and persistent analytics backed by a production-ready database.
 
-## Goals
-- Provide secure user authentication
-- Support AI-based receipt parsing with structured JSON output
-- Enable user correction of extracted receipt data
-- Persist receipts and analytics in a database
-- Protect the app from runaway OpenAI costs with explicit budget limits
+AI Expense Assistant is a deployed full-stack web application that allows authenticated users to upload receipt images, extract structured purchase information using OpenAI Vision models, edit extracted data, and analyze spending patterns through persistent dashboards.
 
-## System Architecture
+Frontend deployment:
 
-### Frontend: React
-The frontend handles:
-- user registration and login
-- receipt image upload
-- display of extracted fields and items
-- correction of receipt data
-- saving corrected receipts
-- presentation of receipt history and analytics
+* Vercel
+* https://ai-expense-assistant-sepia.vercel.app/
 
-The app is configured to support local development through CRA proxy and production deployment through `REACT_APP_API_BASE_URL`.
+Backend deployment:
 
-### Backend: FastAPI
-The backend handles:
-- authentication endpoints (`/register/`, `/login/`, `/logout/`, `/me/`)
-- receipt upload and extraction (`/upload/`)
-- receipt correction persistence (`/receipt/{id}`)
-- analytics endpoints (`/summary/`, `/category_summary/`, `/receipts/`, `/costs/`)
-- correction mapping persistence (`/correct/`)
+* Render
+* https://ai-expense-assistant-cc.onrender.com
 
-It also initializes the database schema on startup and applies legacy schema migration logic for SQLite-to-Postgres compatibility.
+The application uses:
 
-### Database Layer
-The data model includes:
-- `users`: accounts with hashed passwords
-- `sessions`: secure session tokens and expiry times
-- `receipts`: uploaded and corrected receipts with cost metadata
+* React
+* FastAPI
+* PostgreSQL-compatible persistence
+* OpenAI GPT-4.1 Vision
+* cookie-based authentication
+* spending analytics dashboards
 
-The backend supports:
-- Postgres via `DATABASE_URL` for production
-- local SQLite fallback when no `DATABASE_URL` is provided
+This document focuses on three major design decisions made during development and explains the reasoning behind each decision, tradeoffs considered, and the degree of human vs AI involvement.
 
-### AI Extraction Pipeline
-`backend/extractor.py` is responsible for:
-- reading receipt images
-- invoking OpenAI Vision
-- enforcing structured JSON output
-- normalizing merchant names and categories using correction mappings
+---
 
-## Data Model
+# Design Decision 1:
 
-### User
-- `id`
-- `username`
-- `password_hash`
+# Cookie-Based Authentication Instead of localStorage Tokens
 
-### Session
-- `id`
-- `user_id`
-- `token`
-- `expires_at`
+## Decision
 
-### Receipt
-- `id`
-- `store_name`
-- `date`
-- `total`
-- `raw_json`
-- `user_id`
-- `estimated_cost`
-- `created_at`
-- `draft`
+The application uses server-managed session cookies instead of storing authentication tokens in localStorage.
 
-## Request Flow
-1. User logs in with credentials
-2. Frontend sends authenticated requests with cookies
-3. User uploads a receipt image to `/upload/`
-4. Backend checks budget limits and calls OpenAI if allowed
-5. Extracted receipt data is returned to the frontend
-6. User edits receipt details and saves via `/receipt/{id}`
-7. Backend stores the final receipt and updates analytics
+Authentication endpoints:
 
-## Budget Guardrails
-The backend enforces two cost limits:
-- **Per-user monthly limit**: default $5.00
-- **Global daily limit**: default $10.00
+* `POST /register/`
+* `POST /login/`
+* `POST /logout/`
+* `GET /me/`
 
-If a new upload would exceed either limit, the backend rejects it before the AI call.
+The backend creates and validates session cookies, while the frontend uses Axios with `withCredentials: true`.
 
-## Deployment Design
-### Production target
-- Backend: Render or Railway
-- Frontend: Vercel or equivalent static host
-- Database: managed Postgres via `DATABASE_URL`
+---
 
-### Runtime environment
-Required environment variables:
-- `DATABASE_URL`
-- `OPENAI_API_KEY`
-- `SESSION_COOKIE_SECURE`
-- `GLOBAL_DAILY_COST_CEILING`
-- `USER_MONTHLY_COST_CEILING`
-- `ALLOW_ORIGINS`
-- `REACT_APP_API_BASE_URL` (frontend)
+## Why This Decision Was Made
 
-### Backend startup
-- install dependencies from `backend/requirements.txt`
-- start with `uvicorn backend.app:app --host 0.0.0.0 --port $PORT`
+My original proposal planned to use localStorage session persistence because it was simpler to implement quickly.
 
-### Deployment considerations
-- If GitHub integration is blocked, a fork or mirror repo can be used for Render/Vercel deployment
-- Environment variables must be configured in the hosting service; secrets should never be committed
-- `SESSION_COOKIE_SECURE=true` should be set in production with HTTPS enabled
+However, proposal feedback from the course staff identified this as a security issue for a deployed application. The feedback specifically recommended:
 
-## First Deliverable Workflow
-1. User registers and logs in
-2. Upload receipt image
-3. Backend validates budget and extracts structured data
-4. User reviews and corrects the receipt
-5. User saves the corrected receipt
-6. Analytics update with merchant and category spending
+* httpOnly cookies
+* or a managed authentication provider
 
-## Current Status
-- Authentication is implemented
-- receipt extraction and correction flows are implemented
-- receipt history and analytics are implemented
-- Postgres deployment path is documented
-- production deployment is blocked only by GitHub integration approval
+I decided to migrate to cookie-based authentication because:
 
-## Future Enhancements
-- natural language spend summaries
-- recurring purchase detection
-- multi-month trend charts
-- advanced category prediction
-- receipt search and filtering
+* it was significantly more secure than localStorage tokens
+* it still allowed me to implement the auth system myself
+* it matched the “Ship with auth + live URL” requirement more appropriately
+
+This required:
+
+* configuring FastAPI cookie handling
+* adding session tables to the database
+* enabling credentialed CORS requests
+* configuring secure cookie behavior in production
+* updating frontend Axios configuration
+
+---
+
+## Tradeoffs
+
+### Advantages
+
+* Better protection against token theft through XSS
+* More realistic production deployment architecture
+* Sessions can be invalidated server-side
+* Cleaner user authentication flow
+
+### Disadvantages
+
+* More difficult CORS configuration
+* Harder deployment/debugging compared to localStorage
+* Required backend session management
+* Added complexity around cookie expiration and persistence
+
+---
+
+## Human vs AI Contribution
+
+This decision was primarily human-driven.
+
+I chose to redesign the authentication flow after reading the proposal feedback and understanding the deployment/security implications.
+
+AI tools assisted with:
+
+* debugging cookie/CORS issues
+* generating implementation examples
+* identifying FastAPI session configuration problems
+
+However:
+
+* the architectural decision to abandon localStorage
+* the deployment/security reasoning
+* and the integration plan
+
+were decisions I made myself.
+
+---
+
+# Design Decision 2:
+
+# PostgreSQL-Compatible Deployment Architecture
+
+## Decision
+
+The backend was designed to support:
+
+* local SQLite development
+* PostgreSQL-compatible production deployment through `DATABASE_URL`
+
+The production deployment targets:
+
+* Render backend hosting
+* Vercel frontend hosting
+
+The database layer dynamically switches between SQLite and Postgres depending on environment configuration.
+
+---
+
+## Why This Decision Was Made
+
+The original proposal suggested SQLite initially with optional Postgres later.
+
+During proposal feedback, the course staff warned that:
+
+* SQLite could become problematic in deployment environments
+* hosted platforms often expect managed Postgres
+* deployment persistence might fail with SQLite-only infrastructure
+
+Because of this, I redesigned the backend database layer to support production-ready Postgres deployment while preserving SQLite for local development convenience.
+
+This affected:
+
+* SQLAlchemy configuration
+* environment variable handling
+* deployment setup
+* migration logic
+* README and DEMO instructions
+
+---
+
+## Tradeoffs
+
+### Advantages
+
+* More realistic production architecture
+* Easier deployment on Render
+* Better persistence guarantees
+* Easier future scalability
+* Cleaner separation between local and production environments
+
+### Disadvantages
+
+* Additional deployment complexity
+* More environment variable configuration
+* More difficult debugging during deployment
+* Required migration compatibility considerations
+
+---
+
+## Human vs AI Contribution
+
+This was a mixed human/AI design process.
+
+I independently decided:
+
+* to adopt Postgres compatibility
+* to deploy on Render/Vercel
+* and to restructure the deployment architecture after staff feedback
+
+AI assistance helped:
+
+* generate deployment boilerplate
+* debug environment variable issues
+* troubleshoot CORS and backend deployment failures
+* identify database configuration mistakes
+
+The overall architecture and deployment direction were still decisions I made myself.
+
+---
+
+# Design Decision 3:
+
+# Human-in-the-Loop Receipt Correction Workflow
+
+## Decision
+
+The system intentionally allows users to manually edit AI-extracted receipt data before saving receipts permanently.
+
+The workflow is:
+
+1. Upload receipt
+2. AI extracts structured JSON
+3. User reviews/edit fields
+4. User saves corrected receipt
+5. Corrected data persists in analytics/history
+
+Editable fields include:
+
+* merchant name
+* totals
+* dates
+* item categories
+* item prices
+
+---
+
+## Why This Decision Was Made
+
+Receipt OCR and multimodal extraction are inherently imperfect.
+
+Instead of treating the AI output as fully authoritative, I wanted the system to:
+
+* treat extraction as a draft
+* keep users in control
+* support correction workflows
+* improve practical usability
+
+This also aligned well with the original Assignment 2 receipt scanner architecture.
+
+The correction workflow became central to:
+
+* dashboard accuracy
+* analytics quality
+* future category suggestion improvements
+
+This design also made the app feel more realistic because financial applications generally require user verification.
+
+---
+
+## Tradeoffs
+
+### Advantages
+
+* Higher final data quality
+* Better user trust
+* More resilient to OCR/LLM extraction errors
+* Better analytics consistency
+
+### Disadvantages
+
+* Additional frontend complexity
+* More state management
+* Additional backend update endpoints
+* More UI design work
+
+---
+
+## Human vs AI Contribution
+
+This decision was mostly human-driven.
+
+I specifically wanted:
+
+* editable extraction workflows
+* persistent correction handling
+* and user-controlled verification
+
+because I felt that fully automated extraction would be unreliable for real usage.
+
+AI tools mainly assisted with:
+
+* React state management code
+* UI formatting improvements
+* debugging update endpoints
+* implementation speed
+
+The actual workflow design and user interaction model came from my own planning.
+
+---
+
+# Additional Design Considerations
+
+## Cost Guardrails
+
+The application includes:
+
+* per-user monthly spending ceilings
+* global daily OpenAI spending ceilings
+
+This protects the deployment from runaway API usage and reflects production-oriented system design.
+
+---
+
+## Deployment Separation
+
+The frontend and backend are deployed separately:
+
+* Vercel for React frontend
+* Render for FastAPI backend
+
+This separation required:
+
+* explicit CORS configuration
+* environment variable management
+* credentialed requests
+* deployment debugging
+
+but better reflects real-world hosted architectures.
+
+---
+
+# Current Status
+
+Implemented:
+
+* deployed frontend/backend
+* secure cookie auth
+* receipt upload and extraction
+* editable correction workflow
+* receipt persistence
+* spending analytics dashboards
+* production deployment configuration
+
+Planned future work:
+
+* budgeting insight generation
+* recurring purchase detection
+* trend analytics
+* smarter category prediction
+* receipt search/filtering
+
+---
+
+# Reflection
+
+One of the biggest lessons from this project was that deployment and authentication complexity became much larger challenges than the AI extraction itself.
+
+Most debugging time during deployment involved:
+
+* CORS policies
+* cookies/sessions
+* environment variables
+* password hashing
+* frontend/backend integration
+
+rather than the OpenAI extraction pipeline.
+
+The project evolved significantly from the original Assignment 2 receipt scanner into a more production-oriented deployed system with stronger authentication and deployment architecture decisions.

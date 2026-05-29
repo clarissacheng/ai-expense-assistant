@@ -3,73 +3,105 @@
 ## Original Proposal
 
 ### Planned Technologies
-- React
-- FastAPI
-- SQLAlchemy
-- PostgreSQL (Render)
-- SQLite
-- OpenAI GPT-4.1 Vision API
-- passlib
+
+* React
+* FastAPI
+* SQLAlchemy
+* PostgreSQL (Render)
+* SQLite
+* OpenAI GPT-4.1 Vision API
+* passlib
 
 ### First Deliverable
-- Account creation
-- Login with secure cookies
-- Receipt upload
-- Edit extracted data
-- Save receipt
-- Spending summaries
-- Deploy-ready architecture
+
+* Account creation
+* Login with secure session cookies and per-user authentication isolation
+* Receipt upload
+* Edit extracted data
+* Save receipt
+* Spending summaries
+* Deploy-ready architecture
 
 ### Rough Architecture for First Deliverable
-- React frontend: `frontend/src/App.js`
-- FastAPI backend: `backend/app.py`
-- DB layer: `backend/db.py`
-- OpenAI extraction: `backend/extractor.py`
-- Cost guardrails: `GET /costs/` and budget checks in `upload`
-- Auth sessions: cookie-based in `backend/app.py`
+
+* React frontend: `frontend/src/App.jsx`
+* FastAPI backend: `backend/app.py`
+* DB layer: `backend/db.py`
+* OpenAI extraction: `backend/extractor.py`
+* Cost guardrails: `GET /costs/` and budget checks in `upload`
+* Auth sessions: cookie-based in `backend/app.py`
 
 ### After First Deliverable Goals
-- Budgeting insights
-- Recurring purchases
-- Trend charts
-- Smarter category suggestions
-- Receipt search
+
+* Budgeting insights
+* Recurring purchases
+* Trend charts
+* Smarter category suggestions
+* Receipt search
+
+---
 
 ## Marked-up Proposal
 
 ### Planned Technologies
-- React ✅ implemented in `frontend/src/App.js`
-- FastAPI ✅ implemented in `backend/app.py`
-- SQLAlchemy ✅ implemented in `backend/db.py`
-- PostgreSQL (Render) ✅ supported through `DATABASE_URL` and documented in `README.md`
-- SQLite ✅ supported locally by default in `backend/db.py` and described for local development in `README.md`
-- OpenAI GPT-4.1 Vision API ✅ implemented in `backend/extractor.py`
-- passlib ✅ implemented in `backend/db.py`
+
+* React ✅ implemented in `frontend/src/App.jsx`
+* FastAPI ✅ implemented in `backend/app.py`
+* SQLAlchemy ✅ implemented in `backend/db.py`
+* PostgreSQL (Render) ✅ supported through `DATABASE_URL` and documented in `README.md`
+* SQLite ✅ supported locally by default in `backend/db.py` and documented in `README.md`
+* OpenAI GPT-4.1 Vision API ✅ implemented in `backend/extractor.py`
+* passlib ✅ implemented in `backend/db.py`
+* Vercel ✅ used for frontend deployment
+* Render ✅ used for backend deployment
 
 ### First Deliverable
-- Account creation ✅ implemented at `backend/app.py` `POST /register/`
-- Login with secure cookies ✅ implemented at `backend/app.py` `POST /login/`, `GET /me/`, and session cookie handling in the login/logout flow
-- Receipt upload ✅ implemented at `backend/app.py` `POST /upload/` and the React upload flow in `frontend/src/App.js`
-- Edit extracted data ✅ implemented in `frontend/src/App.js` with editable receipt fields and `backend/app.py` `PUT /receipt/{id}` to save corrections
-- Save receipt ✅ implemented in `backend/app.py` `PUT /receipt/{id}` and persisted in `backend/db.py`
-- Spending summaries ✅ implemented in `backend/app.py` `GET /summary/` and `GET /category_summary/`, and displayed in `frontend/src/App.js`
-- Deploy-ready architecture ✅ documented in `README.md`, `DESIGN.md`, and `DEMO.md`; backend build/setup commands are Render-compatible
+
+* Account creation ✅ implemented at `backend/app.py` with `POST /register/`
+* Login with secure session cookies and per-user authentication isolation ✅ implemented at `backend/app.py` with `POST /login/`, `POST /logout/`, and `GET /me/`
+* Password hashing ✅ implemented in `backend/db.py` using `passlib`
+* Receipt upload ✅ implemented at `backend/app.py` `POST /upload/` and integrated into the React upload flow in `frontend/src/App.jsx`
+* Edit extracted data ✅ implemented in `frontend/src/App.jsx` with editable receipt fields and `backend/app.py` `PUT /receipt/{id}`
+* Save receipt ✅ implemented in `backend/db.py` and persisted through backend update endpoints
+* Spending summaries ✅ implemented through `GET /summary/` and `GET /category_summary/` endpoints and displayed in the dashboard UI
+* Deploy-ready architecture ✅ implemented and publicly deployed using Vercel (frontend) and Render (backend)
+* Cost estimation guardrails ✅ implemented in the upload pipeline and surfaced to users after receipt extraction
 
 ### Rough Architecture for First Deliverable
-- React frontend: `frontend/src/App.js` ✅
-- FastAPI backend: `backend/app.py` ✅
-- DB layer: `backend/db.py` ✅
-- OpenAI extraction: `backend/extractor.py` ✅
-- Cost guardrails: implemented in `backend/app.py` `/upload/` and exposed via `GET /costs/` ✅
-- Auth sessions: cookie-based in `backend/app.py` ✅
+
+* React frontend: `frontend/src/App.jsx` ✅ implemented
+* FastAPI backend: `backend/app.py` ✅ implemented
+* Database layer: `backend/db.py` ✅ implemented
+* OpenAI extraction pipeline: `backend/extractor.py` ✅ implemented
+* Cost guardrails: implemented in `backend/app.py` upload handling and exposed through API cost estimation logic ✅
+* Auth sessions: cookie/session-based authentication implemented in `backend/app.py` ✅
+* Deployment layer: frontend deployed on Vercel and backend deployed on Render with environment variable configuration and CORS handling ✅
+
+### Deployment Status
+
+* Frontend successfully deployed to Vercel:
+  https://ai-expense-assistant-sepia.vercel.app/
+
+* Backend successfully deployed to Render:
+  https://ai-expense-assistant-cc.onrender.com
+
+### Deployment Notes
+
+* The deployed system supports authenticated multi-user usage through secure session cookies.
+* Frontend and backend communicate through configured CORS policies.
+* PostgreSQL-compatible deployment architecture is supported through `DATABASE_URL`.
+* Environment variables are configured through the hosting platforms.
+* The application is publicly accessible and supports live end-to-end receipt processing.
 
 ### After First Deliverable Goals
-- Budgeting insights: planned. This will extend existing analytics endpoints and dashboard components to surface natural-language or contextual budget advice.
-- Recurring purchases: planned. This will fit into the receipt history analytics layer and new backend endpoints for repeated merchant/item detection.
-- Trend charts: partially implemented with the current spending dashboard. Monthly and multi-month trends are planned as a next iteration in the frontend UI and backend query logic.
-- Smarter category suggestions: planned. The existing correction persistence architecture in `backend/extractor.py` already supports this extension.
-- Receipt search: planned. This would add a search/query endpoint in `backend/db.py` and a search UI in `frontend/src/App.js`.
+
+* Budgeting insights: planned. This will extend the analytics layer to generate natural-language spending summaries and budget recommendations.
+* Recurring purchases: planned. This feature will analyze merchant repetition patterns and identify recurring subscriptions or purchases.
+* Trend charts: partially implemented. Current dashboards visualize spending summaries; future work includes multi-month trend analysis and additional chart types.
+* Smarter category suggestions: planned. Existing correction persistence infrastructure in `backend/extractor.py` supports future auto-suggestion improvements.
+* Receipt search: planned. This would add searchable receipt filtering by merchant, category, item name, and date range.
 
 ### Notes
-- No items are marked as no longer planned.
-- The proposal remains consistent with the current implementation and future roadmap.
+
+* No proposal items are marked as no longer planned.
+* The deployed implementation remains aligned with the original proposal goals while extending the system with production deployment, authentication, and cost-management infrastructure.
