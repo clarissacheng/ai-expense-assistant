@@ -436,6 +436,19 @@ function App() {
   );
 };
 
+if (!document.getElementById("loading-animation")) {
+  const style = document.createElement("style");
+  style.id = "loading-animation";
+  style.innerHTML = `
+    @keyframes pulse {
+      0% { opacity: 0.3; }
+      50% { opacity: 1; }
+      100% { opacity: 0.3; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 const grid = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
