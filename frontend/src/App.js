@@ -28,6 +28,7 @@ function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -198,6 +199,18 @@ function App() {
     setReceipts([]);
     setMessage("Logged out.");
   };
+
+  const filteredReceipts = receipts.filter((receipt) => {
+    const search = searchTerm.toLowerCase();
+
+    return (
+      receipt.store_name?.toLowerCase().includes(search) ||
+      receipt.date?.toLowerCase().includes(search) ||
+      receipt.data?.items?.some((item) =>
+        item.name?.toLowerCase().includes(search)
+      )
+    );
+  });
 
   const chartData = summary.map((s) => ({
     store: s.store,
@@ -412,10 +425,20 @@ function App() {
           <div style={column}>
             <div style={card}>
               <h3>Receipt History</h3>
-              {receipts.length === 0 ? (
-                <p>No receipts saved yet.</p>
+              <input
+                style={input}
+                placeholder="Search receipts by store, date, or item..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              {filteredReceipts.length === 0 ? (
+                <p>
+                  {searchTerm
+                    ? "No matching receipts found."
+                    : "No receipts saved yet."}
+                </p>
               ) : (
-                receipts.map((r) => (
+                filteredReceipts.map((r) => (
                   <div key={r.id} style={historyItem}>
                     <b>{r.store_name}</b>
                     <div>${r.total}</div>
