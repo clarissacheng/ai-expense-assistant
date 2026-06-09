@@ -328,3 +328,14 @@ def load_corrections() -> dict:
 def save_corrections(corrections: dict) -> None:
     with open(CORRECTIONS_FILE, "w") as f:
         json.dump(corrections, f, indent=2)
+
+def delete_receipt(receipt_id: int, user_id: int) -> bool:
+    with engine.begin() as conn:
+        result = conn.execute(
+            delete(receipts).where(
+                receipts.c.id == receipt_id,
+                receipts.c.user_id == user_id
+            )
+        )
+
+        return result.rowcount > 0

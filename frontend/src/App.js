@@ -319,6 +319,23 @@ function App() {
                     <b>{r.store_name}</b>
                     <div>${r.total}</div>
                     <div style={{ fontSize: 12 }}>{r.date}</div>
+                    <button
+                      style={{
+                        marginTop: "5px",
+                        background: "#f44336",
+                        color: "white",
+                        border: "none",
+                        padding: "5px 10px",
+                        borderRadius: "5px",
+                        cursor: "pointer"
+                      }}
+                      onClick={async () => {
+                        await api.delete(`/receipt/${r.id}`);
+                        await refreshAll();
+                      }}
+                    >
+                      Delete
+                    </button>
                   </div>
                 ))
               )}

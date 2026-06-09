@@ -16,6 +16,7 @@ from backend.db import (
     get_user_by_session,
     save_draft_receipt,
     update_receipt,
+    delete_receipt as db_delete_receipt,
     get_summary,
     get_category_summary,
     get_receipts,
@@ -182,3 +183,18 @@ def correct(data: dict, user: dict = Depends(require_user)):
 
     save_corrections(corrections)
     return {"status": "saved"}
+
+@app.delete("/receipt/{receipt_id}")
+def delete_receipt_route(receipt_id: int, user: dict = Depends(require_user)):
+    success = db_delete_receipt(
+        receipt_id,
+        user["id"]
+    )
+
+    if not success:
+        raise HTTPException(
+            status_code=404,
+            detail="Receipt not found"
+        )
+
+    return {"status": "deleted"}
