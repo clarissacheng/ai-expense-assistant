@@ -28,6 +28,7 @@ function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -68,21 +69,34 @@ function App() {
       setMessage("Please login first.");
       return;
     }
+
     if (!file) {
       setMessage("Please choose a receipt image.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
+    try {
+      setLoading(true);
+      setMessage("Processing receipt...");
 
-    const res = await api.post("/upload/", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+      const formData = new FormData();
+      formData.append("file", file);
 
-    setData(res.data.data);
-    setReceiptId(res.data.receipt_id);
-    setMessage(`Receipt extracted. Estimated API cost: $${res.data.estimated_cost.toFixed(2)}`);
+      const res = await api.post("/upload/", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setData(res.data.data);
+      setReceiptId(res.data.receipt_id);
+
+      setMessage(
+        `Receipt extracted. Estimated API cost: $${res.data.estimated_cost.toFixed(2)}`);
+    } catch (err) {
+      setMessage(
+        err?.response?.data?.detail || "Upload failed.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (field, value) => {
@@ -250,9 +264,48 @@ function App() {
       <div style={card}>
         <h2>Upload Receipt</h2>
         <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-        <button style={button} onClick={handleUpload}>
-          Upload Receipt
+        <button
+          style={{
+            ...button,
+            opacity: loading ? 0.7 : 1,
+          }}
+          onClick={handleUpload}
+          disabled={loading}
+        >
+          {loading ? "Processing..." : "Upload Receipt"}
         </button>
+        {loading && (
+          <p
+            style={{
+              marginTop: "10px",
+              color: "#555",
+              fontWeight: "bold",
+            }}
+          >
+            ⏳ Extracting receipt data...
+          </p>
+        )}
+        {loading && (
+          <div
+            style={{
+              width: "100%",
+              height: "8px",
+              background: "#ddd",
+              borderRadius: "4px",
+              overflow: "hidden",
+              marginTop: "10px",
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                background: "#4CAF50",
+                animation: "pulse 1.2s infinite",
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {data && (
