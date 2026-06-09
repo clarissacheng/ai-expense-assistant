@@ -132,6 +132,11 @@ async def upload(file: UploadFile = File(...), user: dict = Depends(require_user
         raise HTTPException(status_code=402, detail="Global daily API cost ceiling reached")
 
     result = extract_receipt_data(contents)
+    if result.get("not_receipt"):
+        raise HTTPException(
+            status_code=400,
+            detail="Uploaded file does not appear to be a receipt."
+        )
     if isinstance(result, dict) and result.get("error"):
         raise HTTPException(status_code=500, detail=result["error"])
 

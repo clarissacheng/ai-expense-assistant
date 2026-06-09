@@ -23,9 +23,22 @@ def extract_receipt_data(image_bytes):
         Use these corrections:
         {json.dumps(corrections, indent=2)}
 
-        Return ONLY valid JSON matching this schema:
+        First determine whether the image is actually a receipt.
+
+        If the image is NOT a receipt
+        (for example: a selfie, landscape, pet photo, screenshot,
+        document, meme, blank image, random object, etc.)
+
+        Return ONLY:
 
         {{
+        "not_receipt": true
+        }}
+
+        Otherwise return ONLY valid JSON matching this schema:
+
+        {{
+        "not_receipt": false,
         "store_name": "string",
         "date": "string",
         "items": [
@@ -44,6 +57,8 @@ def extract_receipt_data(image_bytes):
         - Normalize store names using corrections
         - Normalize item categories using corrections
         - Do not hallucinate fields
+        - If uncertain whether the image is a receipt, return not_receipt=true
+        - Return ONLY valid JSON
         """
 
     try:

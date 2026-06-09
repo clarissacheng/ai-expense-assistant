@@ -76,6 +76,20 @@ function App() {
       return;
     }
 
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/webp",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      setMessage(
+        "Please upload a PNG, JPG, or WEBP image."
+      );
+      return;
+    }
+
     try {
       setLoading(true);
       setMessage("Processing receipt...");
@@ -313,6 +327,18 @@ function App() {
         >
           {loading ? "Processing..." : "Upload Receipt"}
         </button>
+        {message && (
+          <div
+            style={{
+              marginTop: "10px",
+              padding: "10px",
+              borderRadius: "6px",
+              background: "#fff3cd",
+            }}
+          >
+            {message}
+          </div>
+        )}
         {loading && (
           <p
             style={{
