@@ -117,6 +117,23 @@ function App() {
     setMessage("Saved!");
   };
 
+
+  const addItem = () => {
+    setData({
+      ...data,
+      items: [
+        ...(data.items || []),
+        {
+          name: "",
+          quantity: 1,
+          unit_price: "",
+          total_price: "",
+          category: "",
+        },
+      ],
+    });
+  };
+
   const updateItem = (index, field, value) => {
     const updatedItems = [...(data.items || [])];
     updatedItems[index] = {
@@ -124,6 +141,15 @@ function App() {
       [field]: value,
     };
 
+    setData({
+      ...data,
+      items: updatedItems,
+    });
+  };
+
+  const removeItem = (index) => {
+    const updatedItems = [...(data.items || [])];
+    updatedItems.splice(index, 1);
     setData({
       ...data,
       items: updatedItems,
@@ -351,8 +377,30 @@ function App() {
               <div style={{ fontSize: 12 }}>
                 Qty: {item.quantity} | Total: ${item.total_price}
               </div>
+              <button
+                style={{
+                  background: "#f44336",
+                  color: "white",
+                  border: "none",
+                  padding: "5px 10px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  marginTop: "5px",
+                }}
+                onClick={() => removeItem(i)}
+              >
+                Remove Item
+              </button>
             </div>
           ))}
+          <button
+            style={{
+              ...button,
+              background: "#2196F3",
+              marginBottom: "10px",
+            }}
+            onClick={addItem}
+          >+ Add Item</button>
           <button style={button} onClick={handleSubmit}>
             Save Corrections
           </button>
