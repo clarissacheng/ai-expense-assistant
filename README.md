@@ -31,30 +31,45 @@ https://ai-expense-assistant-cc.onrender.com
 
 ## Authentication
 
-* user registration
-* secure login/logout
-* cookie-based session management
-* per-user receipt isolation
+* User registration
+* Secure login/logout
+* HTTP-only cookie-based session management
+* Per-user receipt isolation
 
-## Receipt Extraction
+## AI Receipt Extraction
 
-* receipt image upload
+* Receipt image upload
 * OpenAI GPT-4.1 Vision extraction
-* structured JSON parsing
-* editable extracted receipt fields
+* Automatic item categorization using LLM inference
+* Structured JSON parsing
+* Editable extracted receipt fields
+* Add missing receipt items manually
+
+## Receipt Validation
+
+* Client-side file type validation
+* Detection of non-receipt uploads
+* User-friendly error messages for invalid uploads
+
+## Receipt Management
+
+* Save corrected receipts
+* Receipt history
+* Delete receipts
+* Receipt search by merchant name
 
 ## Analytics
 
-* receipt history
-* spending by merchant
-* spending by category
-* interactive spending dashboard charts
+* Spending by merchant
+* Spending by category
+* Interactive spending dashboard charts
+* Budgeting insights generated from receipt history
 
 ## Cost Guardrails
 
-* per-user monthly OpenAI cost ceilings
-* global daily OpenAI cost ceilings
-* upload rejection when limits are exceeded
+* Per-user monthly OpenAI cost ceilings
+* Global daily OpenAI cost ceilings
+* Upload rejection when limits are exceeded
 
 ## Deployment
 
@@ -205,10 +220,17 @@ http://localhost:3000
 1. Register a new account
 2. Login
 3. Upload a receipt image
-4. AI extracts structured receipt data
-5. Edit extracted fields if needed
-6. Save corrected receipt
-7. View receipt history and analytics dashboards
+4. Loading indicator displays while processing
+5. System validates that the upload is a receipt
+6. GPT-4.1 Vision extracts receipt contents
+7. Categories are automatically assigned to items
+8. User edits extracted fields if needed
+9. User adds missing items if extraction missed anything
+10. Save corrected receipt
+11. View receipt history
+12. Search receipts by merchant
+13. Delete receipts if desired
+14. View spending dashboards and budgeting insights
 
 ---
 
@@ -283,6 +305,24 @@ The frontend displays:
 Why:
 
 * converts extracted receipts into actionable spending insights
+
+---
+
+# Review-Day Improvements
+
+The final submission incorporates feedback received during review day.
+
+Implemented improvements include:
+
+* Receipt deletion functionality
+* Receipt search/filtering
+* Upload loading indicator
+* Non-receipt image detection
+* Automatic category assignment for receipt items
+* Budgeting insights generated from spending history
+* Additional user controls for correcting extracted receipt data
+
+These improvements focused on usability, error handling, and helping users better understand their spending patterns.
 
 ---
 
@@ -378,6 +418,7 @@ YouTube demo link:
 
 ```
 [Demo Video](https://drive.google.com/file/d/1OmqLH296ERY-5ax_RIC-AQP1PT4eNteQ/view?usp=sharing)
+[Final Demo Video](https://drive.google.com/file/d/1xVDudpaP71XWPAJyEhWiDGOAFlWKuUx1/view?usp=sharing)
 ```
 
 The demo video includes:
@@ -429,10 +470,13 @@ rather than the OpenAI extraction pipeline itself.
 
 # Future Improvements
 
-Planned future enhancements:
+Potential future enhancements include:
 
-* natural-language budgeting insights
-* recurring purchase detection
-* multi-month trend analytics
-* smarter category prediction
-* receipt search and filtering
+* Recurring purchase detection
+* Subscription detection
+* Multi-month trend analysis
+* Additional chart visualizations
+* Budget goal tracking
+* Spending anomaly detection
+* Receipt export to CSV/PDF
+* Shared household expense tracking
