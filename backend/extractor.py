@@ -47,7 +47,7 @@ def extract_receipt_data(image_bytes):
             "unit_price": 0,
             "quantity": 0,
             "total_price": 0,
-            "category": "string"
+            "category": "string (AUTOMATICALLY ASSIGN BEST FIT CATEGORY)"
             }}
         ],
         "total": 0
@@ -56,6 +56,10 @@ def extract_receipt_data(image_bytes):
         Rules:
         - Normalize store names using corrections
         - Normalize item categories using corrections
+        - You MUST assign a category for every item
+        - Categories should be short and consistent
+        - Prefer reuse of categories when items are similar across receipts
+        - Infer category from item name if not obvious
         - Do not hallucinate fields
         - If uncertain whether the image is a receipt, return not_receipt=true
         - Return ONLY valid JSON
