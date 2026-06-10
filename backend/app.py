@@ -133,12 +133,11 @@ async def upload(file: UploadFile = File(...), user: dict = Depends(require_user
 
     result = extract_receipt_data(contents)
     if result.get("not_receipt"):
-        raise HTTPException(
-            status_code=400,
-            detail="Uploaded file does not appear to be a receipt."
-        )
+        raise HTTPException(status_code=400, detail="Uploaded file does not appear to be a receipt.")
     if isinstance(result, dict) and result.get("error"):
         raise HTTPException(status_code=500, detail=result["error"])
+    if result.get("not_receipt"):
+        raise HTTPException(status_code=400, detail="Uploaded image does not appear to be a receipt.")
 
     receipt_id = save_draft_receipt(result, user["id"], estimated_cost)
     return {"receipt_id": receipt_id, "data": result, "estimated_cost": estimated_cost}
