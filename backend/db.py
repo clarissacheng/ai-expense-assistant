@@ -316,6 +316,36 @@ def get_global_daily_cost() -> float:
             total += float(row.estimated_cost or 0)
     return total
 
+def get_budget_insights(user_id: int):
+    category_totals = get_category_summary(user_id)
+    total_spent = sum(category_totals.values())
+    insights = []
+
+    if total_spent == 0:
+        return {
+            "total_spent": 0,
+            "insights": ["Upload receipts to start receiving budgeting insights."]}
+
+    top_category = max(category_totals, key=category_totals.get)
+    top_amount = category_totals[top_category]
+
+    insights.append(
+        f"You spent ${top_amount:.2f} on {top_category}, your highest spending category.")
+
+    if top_amount > total_spent * 0.50:
+        insights.append(
+            f"More than 50% of your spending is in {top_category}. Consider setting a budget for this category.")
+
+    if len(category_totals) >= 3:
+        insights.append(
+            "Your spending is spread across multiple categories, which may indicate balanced purchasing habits.")
+
+    insights.append(
+        f"Total tracked spending: ${total_spent:.2f}")
+
+    return {
+        "total_spent": total_spent,
+        "insights": insights}
 
 def load_corrections() -> dict:
     try:

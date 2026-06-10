@@ -24,6 +24,7 @@ function App() {
   const [categorySummary, setCategorySummary] = useState({});
   const [receipts, setReceipts] = useState([]);
   const [receiptId, setReceiptId] = useState(null);
+  const [budgetInsights, setBudgetInsights] = useState([]);
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -60,6 +61,9 @@ function App() {
 
       const res3 = await api.get("/receipts/");
       setReceipts(res3.data || []);
+
+      const res4 = await api.get("/budget_insights/");
+      setBudgetInsights(res4.data.insights || []);
     } catch (err) {
       console.error(err);
     }
@@ -525,6 +529,28 @@ function App() {
                   <span>${total.toFixed(2)}</span>
                 </div>
               ))}
+            </div>
+
+            <div style={card}>
+              <h3>AI Budgeting Insights</h3>
+
+              {budgetInsights.length === 0 ? (
+                <p>No insights available.</p>
+              ) : (
+                budgetInsights.map((insight, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      marginBottom: "10px",
+                      padding: "10px",
+                      background: "#f5f5f5",
+                      borderRadius: "8px"
+                    }}
+                  >
+                    {insight}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

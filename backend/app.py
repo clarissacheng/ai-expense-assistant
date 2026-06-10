@@ -22,6 +22,7 @@ from backend.db import (
     get_receipts,
     get_user_monthly_cost,
     get_global_daily_cost,
+    get_budget_insights,
     load_corrections,
     save_corrections,
     USER_MONTHLY_COST_CEILING,
@@ -169,6 +170,10 @@ def cost_summary(user: dict = Depends(require_user)):
         "global_daily_cost": get_global_daily_cost(),
         "global_daily_limit": GLOBAL_DAILY_COST_CEILING,
     }
+
+@app.get("/budget_insights/")
+def budget_insights(user: dict = Depends(require_user)):
+    return get_budget_insights(user["id"])
 
 @app.post("/correct/")
 def correct(data: dict, user: dict = Depends(require_user)):
