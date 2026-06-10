@@ -95,11 +95,32 @@
 
 ### After First Deliverable Goals
 
-* Budgeting insights: planned. This will extend the analytics layer to generate natural-language spending summaries and budget recommendations.
-* Recurring purchases: planned. This feature will analyze merchant repetition patterns and identify recurring subscriptions or purchases.
-* Trend charts: partially implemented. Current dashboards visualize spending summaries; future work includes multi-month trend analysis and additional chart types.
-* Smarter category suggestions: planned. Existing correction persistence infrastructure in `backend/extractor.py` supports future auto-suggestion improvements.
-* Receipt search: planned. This would add searchable receipt filtering by merchant, category, item name, and date range.
+* Budgeting insights ✅ implemented.
+  Implemented spending insight generation that analyzes receipt history and category spending patterns. Users receive personalized summaries and spending recommendations. Implemented in `backend/app.py`, `backend/db.py`, and displayed in `frontend/src/App.js`.
+
+* Smarter category suggestions ✅ implemented
+  GPT-4.1 Vision now automatically assigns categories to extracted receipt items during processing. Implemented in `backend/extractor.py`.
+
+* Receipt search ✅ implemented.
+  Users can search and filter receipt history by merchant name through the frontend search interface implemented in `frontend/src/App.js`.
+
+* Receipt deletion ✅ implemented.
+  Added ability to delete saved receipts from receipt history. Implemented through `DELETE /receipt/{id}` in `backend/app.py`, deletion logic in `backend/db.py`, and UI controls in `frontend/src/App.js`.
+
+* Loading/progress feedback ✅ implemented.
+  Added upload loading state and user feedback while receipt extraction is processing. Implemented in `frontend/src/App.js`.
+
+* Non-receipt detection ✅ implemented.
+  Added LLM-based receipt validation that rejects non-receipt uploads before extraction. Implemented in `backend/extractor.py` and upload handling in `backend/app.py`.
+
+* Missing item editing ✅ implemented.
+  Users can manually add missing receipt items after extraction and before saving corrections. Implemented in `frontend/src/App.js`.
+
+* Recurring purchases ⚠️ not implemented.
+  Identified during review as a valuable future feature. Due to project timeline constraints this feature was deferred to future work and documented in `REGRETS.md`.
+
+* Trend charts ⚠️ partially implemented.
+  Spending dashboards and category-spending visualizations are implemented using Recharts in `frontend/src/App.js`. Additional historical trend analysis and long-term spending projections remain future work.
 
 ### Notes
 
